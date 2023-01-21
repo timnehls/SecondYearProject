@@ -9,7 +9,7 @@
             "name": "Launch GraphCreator",
             "request": "launch",
             "mainClass": "GraphCreator",
-            "projectName": "SYP1_eff28ba8",
+            "projectName": "SecondYearProject_b4c6b6ee",
             "args": "15"
         },
         {
@@ -17,14 +17,6 @@
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Launch GraphCreator",
-            "request": "launch",
-            "mainClass": "GraphCreator",
-            "projectName": "SYP1_2339e901",
-            "args": "15"
         },
         {
             "type": "java",

@@ -50,12 +50,48 @@ public class Elimination {
         return payoffMatrix;
     }
 
-    public int[][][] eliminate(int[][][] payoffMatrix) {
-        for(int i = 0; i < payoffMatrix.length; i++) {
-            for(int j = 0; j < payoffMatrix[i].length; j++) {
+    public static void eliminate(int[][][] payoffMatrix, Graph graph) {
+        int[][][] matrix = payoffMatrix;
+
+        // row elimination
+        for(int i = 0; i < matrix.length; i++) {    
+            boolean[] row = new boolean[matrix[i].length];
+            
+            for(int j = 0; j < matrix.length; j++) {
+                if(j != i) {
+                    for(int k = 0; k < matrix[i].length; k++) {
+                        if(matrix[i][k][0] > matrix[j][k][0]) {
+                            row[k] = false;
+                            break;
+                        } else row[k] = true;
+                    }
+
+                    if(isDominated(row)) break;
+                }
+            }
+
+            if(isDominated(row)) {
+                System.out.println("The city " + graph.getCities().get(i).getName() + " has been eliminated.");
+
+                int[][][] newMatrix = new int[matrix.length-1][matrix[1].length][2];
+
+                for(int a = 0; a < newMatrix.length; a++) {
+                    if(a != i) {
+                        newMatrix[a] = matrix[a];
+                    }
+                }
+
+                matrix = newMatrix;
             }
         }
 
-        return null;
+        System.out.println("Number of remaining cities: " + matrix.length);
+        // return null;
+    }
+
+    public static boolean isDominated(boolean[] row) {
+        for(boolean payoff : row)
+            if(!payoff) return false;
+        return true;
     }
 }

@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.Scanner;
 
 public class GraphCreator {
@@ -12,13 +12,13 @@ public class GraphCreator {
         City[] cities = readCities("cities.txt");
         Graph graph = createGraph(cities, maxDistance);
 
-        double[][] matrix = graph.createAdjacencyMatrix();
+        // double[][] matrix = graph.createAdjacencyMatrix();
 
         // System.out.println(Arrays.deepToString(matrix));
 
         int[][][] payoffs = Elimination.createPayoffMatrix(graph);
 
-        System.out.println(Arrays.deepToString(payoffs));
+        Elimination.eliminate(payoffs, graph);
     }
 
     public static Graph createGraph(City[] cities, int maxDistance) {
