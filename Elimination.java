@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,6 +44,18 @@ public class Elimination {
             }
         }
 
+        try {
+            File file = new File("results.txt");
+            FileWriter w = new FileWriter(file);
+            w.write(Arrays.deepToString(payoffMatrix));
+
+            w.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        
+
         return payoffMatrix;
     }
 
@@ -54,6 +68,7 @@ public class Elimination {
         int round = 1;
 
         do {
+            countEliminated = 0;
             System.out.println("Round " + round);
             for(int i = 0; i < matrix.length; i++) {    
                 boolean[] isRowDominated = new boolean[matrix[i].length];
@@ -71,7 +86,7 @@ public class Elimination {
                     }
                 }
     
-                if(isDominated(isRowDominated)) {
+                if(!isDominated(isRowDominated)) {
                     City removedCity = citiesLeft.get(i);
                     System.out.println("City " + removedCity.getName() + " has been removed.");
                     citiesLeft.remove(i);
@@ -85,7 +100,7 @@ public class Elimination {
             round++;
         } while(countEliminated > 0 && matrix.length > 1);
 
-
+        System.out.println(citiesLeft.get(0).getName());
         return matrix;
     }
 

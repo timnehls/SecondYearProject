@@ -1,6 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+// import java.util.Arrays;
 import java.util.Scanner;
 
 public class GraphCreator {
@@ -29,7 +29,7 @@ public class GraphCreator {
             }
         }
 
-        System.out.println(Arrays.deepToString(matrix));
+        // System.out.println(Arrays.deepToString(matrix));
 
         return matrix;
     }
