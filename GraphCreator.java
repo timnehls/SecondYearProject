@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-// import java.util.Arrays;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class GraphCreator {
@@ -10,37 +9,29 @@ public class GraphCreator {
         int maxDistance = Integer.parseInt(args[0]);
 
         City[] cities = readCities("cities.txt");
-        Graph graph = createGraph(cities, maxDistance);
+        boolean[][] edges = createEdgeMatrix(cities, maxDistance);
 
-        // double[][] matrix = graph.createAdjacencyMatrix();
+        int[][] payoffs = Elimination.createPayoffMatrix(edges, cities);
 
-        // System.out.println(Arrays.deepToString(matrix));
-
-        int[][][] payoffs = Elimination.createPayoffMatrix(graph);
-
-        Elimination.eliminate(payoffs, graph);
+        Elimination.eliminate(payoffs, cities);
     }
 
-    public static Graph createGraph(City[] cities, int maxDistance) {
-        Graph graph = new Graph();
+
+    private static boolean[][] createEdgeMatrix(City[] cities, int maxDistance) {
+        boolean[][] matrix = new boolean[cities.length][cities.length];
         
-        if(cities != null) {
-            for(int i = 0; i < cities.length; i++) {
-                City currentCity = cities[i];
+        for(int i = 0; i < cities.length; i++) {
+            City currentCity = cities[i];
 
-                graph.addCity(currentCity);
-
-                ArrayList<City> citiesInGraph = graph.getCities();
-                for(City otherCity : citiesInGraph) {
-                    double distance = currentCity.dist(otherCity);
-                    if(distance <= maxDistance && otherCity != currentCity) {
-                        graph.addEdge(currentCity, otherCity);
-                    }
-                }
+            for(int j = 0; j < cities.length; j++) {
+                City otherCity = cities[j];
+                if(currentCity.dist(otherCity) <= maxDistance) matrix[i][j] = true; 
             }
         }
 
-        return graph;
+        System.out.println(Arrays.deepToString(matrix));
+
+        return matrix;
     }
 
 

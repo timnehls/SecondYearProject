@@ -1,3 +1,5 @@
+package Hinterkopf;
+
 import java.util.ArrayList;
 
 public class Graph {
@@ -25,7 +27,7 @@ public class Graph {
         this.edges.add(new Edge(city, anotherCity));
     }
 
-    public double[][] createAdjacencyMatrix() {
+    /* public double[][] createAdjacencyMatrix() {
         double[][] matrix = new double[50][50];
 
         for(Edge edge : edges) {
@@ -40,6 +42,6 @@ public class Graph {
         }
 
         return matrix;
-    }
+    } */
 
 }

@@ -1,3 +1,5 @@
+package Hinterkopf;
+
 public class Edge {
     private final City[] cities;
 

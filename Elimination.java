@@ -1,29 +1,27 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Elimination {
 
-    public static int[][][] createPayoffMatrix(Graph graph) {
-        ArrayList<City> cities = graph.getCities();
-        int numberOfCities = cities.size();
+    public static int[][] createPayoffMatrix(boolean[][] edges, City[] cities) {
+        int numberOfCities = cities.length;
         int totalNumberOfInhabitants = 0;
 
         for(City city : cities) totalNumberOfInhabitants += city.getSize();
 
 
-        int[][][] payoffMatrix = new int[numberOfCities][numberOfCities][2];
+        int[][] payoffMatrix = new int[numberOfCities][numberOfCities];
 
         for(int i = 0; i < numberOfCities; i++) {
             for(int j = 0; j < numberOfCities; j++) {
-                City firstCity = cities.get(i);
-                City secondCity = cities.get(j);
+                City firstCity = cities[i];
+                City secondCity = cities[j];
 
                 if(firstCity == secondCity) {
-                    int[] payoffs = {totalNumberOfInhabitants / 2, totalNumberOfInhabitants / 2};
-                    payoffMatrix[i][j] = payoffs;
+                    int payoff = totalNumberOfInhabitants / 2;
+                    payoffMatrix[i][j] = payoff;
                 } else {
-                    int customersFirst = 0;
-                    int customersSecond = 0;
-    
+                    int customers = 0;
     
                     for(City city : cities) {
                         int size = city.getSize();
@@ -32,17 +30,14 @@ public class Elimination {
                         double distanceToSecond = city.dist(secondCity);
     
                         if(distanceToFirst < distanceToSecond) {
-                            customersFirst += size;
-                        } else if(distanceToFirst > distanceToSecond) {
-                            customersSecond += size;
-                        } else {
-                            customersFirst += size / 2;
-                            customersSecond += size / 2;
+                            customers += size;
+                        } else if(distanceToFirst == distanceToSecond) {
+                            customers += size / 2;
                         }
                     }
     
-                    int[] payoffs = {customersFirst, customersSecond};
-                    payoffMatrix[i][j] = payoffs;
+                    int payoff = customers;
+                    payoffMatrix[i][j] = payoff;
                 }
             }
         }
@@ -50,43 +45,76 @@ public class Elimination {
         return payoffMatrix;
     }
 
-    public static void eliminate(int[][][] payoffMatrix, Graph graph) {
-        int[][][] matrix = payoffMatrix;
 
-        // row elimination
-        for(int i = 0; i < matrix.length; i++) {    
-            boolean[] row = new boolean[matrix[i].length];
-            
-            for(int j = 0; j < matrix.length; j++) {
-                if(j != i) {
-                    for(int k = 0; k < matrix[i].length; k++) {
-                        if(matrix[i][k][0] > matrix[j][k][0]) {
-                            row[k] = false;
-                            break;
-                        } else row[k] = true;
+    public static int[][] eliminate(int[][] payoffMatrix, City[] cities) {
+        ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
+
+        int[][] matrix = payoffMatrix;
+        int countEliminated = 0;
+        int round = 1;
+
+        do {
+            System.out.println("Round " + round);
+            for(int i = 0; i < matrix.length; i++) {    
+                boolean[] isRowDominated = new boolean[matrix[i].length];
+                
+                for(int j = 0; j < matrix.length; j++) {
+                    if(j != i) {
+                        for(int k = 0; k < matrix[i].length; k++) {
+                            if(matrix[i][k] > matrix[j][k]) {
+                                isRowDominated[k] = false;
+                                break;
+                            } else isRowDominated[k] = true;
+                        }
+    
+                        if(isDominated(isRowDominated)) break;
                     }
+                }
+    
+                if(isDominated(isRowDominated)) {
+                    City removedCity = citiesLeft.get(i);
+                    System.out.println("City " + removedCity.getName() + " has been removed.");
+                    citiesLeft.remove(i);
 
-                    if(isDominated(row)) break;
+                    matrix = deleteCity(matrix, i);
+                    countEliminated++;
                 }
             }
+    
+            System.out.println("Number of remaining cities: " + matrix.length);
+            round++;
+        } while(countEliminated > 0 && matrix.length > 1);
 
-            if(isDominated(row)) {
-                System.out.println("The city " + graph.getCities().get(i).getName() + " has been eliminated.");
 
-                int[][][] newMatrix = new int[matrix.length-1][matrix[1].length][2];
+        return matrix;
+    }
 
-                for(int a = 0; a < newMatrix.length; a++) {
-                    if(a != i) {
-                        newMatrix[a] = matrix[a];
-                    }
-                }
 
-                matrix = newMatrix;
+    private static int[][] deleteCity(int[][] matrix, int cityID) {
+        // System.out.println("The city " + graph.getCities().get(cityID).getName() + " has been eliminated.");
+
+        int[][] newMatrix = new int[matrix.length-1][matrix[0].length];
+
+        for(int a = 0; a < newMatrix.length; a++) {
+            if(a != cityID) {
+                newMatrix[a] = matrix[a];
             }
         }
 
-        System.out.println("Number of remaining cities: " + matrix.length);
-        // return null;
+        matrix = newMatrix;
+
+        newMatrix = new int[matrix.length][matrix[0].length-1];
+
+        for(int a = 0; a < newMatrix.length; a++) {
+            for(int b = 0; b < newMatrix[0].length; b++) {
+                if(b != cityID) {
+                    newMatrix[a][b] = matrix[a][b];
+                }
+            }
+        }
+
+        matrix = newMatrix;
+        return matrix;
     }
 
     public static boolean isDominated(boolean[] row) {
