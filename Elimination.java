@@ -17,8 +17,6 @@ public class Elimination {
 
             cityDeleted = false;
             for(int row = 0; row < payoff.length; row++) {
-                // boolean rowDominated = true;
-    
                 for(int secondRow = 0; secondRow < payoff.length; secondRow++) {
                     boolean rowDominated = true;
                     if(row != secondRow) {
