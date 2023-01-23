@@ -19,7 +19,7 @@ public class Helper {
         // Elimination.citiesLeftAfterElimination(payoffs, cities);
 
         City startA = cities.get(0);
-        City startB = cities.get(1);
+        City startB = cities.get(45);
 
         LocalSearch.performLocalSearch(cities, edges, payoffs, startA, startB);
 

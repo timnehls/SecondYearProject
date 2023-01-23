@@ -2,8 +2,6 @@ import java.util.ArrayList;
 
 public class LocalSearch {
 
-
-
     public static void performLocalSearch(ArrayList<City> cities, boolean[][] adjacencyMatrix, int[][] payoffs, City startA, City startB) {
         int idA = cities.indexOf(startA);
         int idB = cities.indexOf(startB);
@@ -71,7 +69,7 @@ public class LocalSearch {
         ArrayList<Integer> neighbours = new ArrayList<>();
         
         for(int column = 0; column < adjacencyMatrix[cityID].length; column++) {
-            if(adjacencyMatrix[cityID][column]) neighbours.add(column);
+            if(adjacencyMatrix[cityID][column] && cityID != column) neighbours.add(column);
         }
         
         return neighbours;
