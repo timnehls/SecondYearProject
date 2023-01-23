@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 // import java.util.Arrays;
 import java.util.Scanner;
 
@@ -8,10 +9,12 @@ public class GraphCreator {
     public static void main(String[] args) {
         int maxDistance = Integer.parseInt(args[0]);
 
-        City[] cities = readCities("cities.txt");
+        City[] cities = readCities("InputExample.txt");
         boolean[][] edges = createEdgeMatrix(cities, maxDistance);
 
         int[][] payoffs = Elimination.createPayoffMatrix(edges, cities);
+
+        System.out.println(Arrays.deepToString(payoffs));
 
         Elimination.eliminate(payoffs, cities);
     }

@@ -61,47 +61,10 @@ public class Elimination {
 
 
     public static int[][] eliminate(int[][] payoffMatrix, City[] cities) {
-        ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
+        
+        
+        return null;
 
-        int[][] matrix = payoffMatrix;
-        int countEliminated = 0;
-        int round = 1;
-
-        do {
-            countEliminated = 0;
-            System.out.println("Round " + round);
-            for(int i = 0; i < matrix.length; i++) {    
-                boolean[] isRowDominated = new boolean[matrix[i].length];
-                
-                for(int j = 0; j < matrix.length; j++) {
-                    if(j != i) {
-                        for(int k = 0; k < matrix[i].length; k++) {
-                            if(matrix[i][k] > matrix[j][k]) {
-                                isRowDominated[k] = false;
-                                break;
-                            } else isRowDominated[k] = true;
-                        }
-    
-                        if(isDominated(isRowDominated)) break;
-                    }
-                }
-    
-                if(!isDominated(isRowDominated)) {
-                    City removedCity = citiesLeft.get(i);
-                    System.out.println("City " + removedCity.getName() + " has been removed.");
-                    citiesLeft.remove(i);
-
-                    matrix = deleteCity(matrix, i);
-                    countEliminated++;
-                }
-            }
-    
-            System.out.println("Number of remaining cities: " + matrix.length);
-            round++;
-        } while(countEliminated > 0 && matrix.length > 1);
-
-        System.out.println(citiesLeft.get(0).getName());
-        return matrix;
     }
 
 
