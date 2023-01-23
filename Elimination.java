@@ -3,57 +3,22 @@ import java.util.Arrays;
 
 public class Elimination {
 
-    public static int[][] createPayoffMatrix(boolean[][] edges, City[] cities) {
-        int numberOfCities = cities.length;
-        int totalNumberOfInhabitants = 0;
-
-        for(City city : cities) totalNumberOfInhabitants += city.getSize();
-
-
-        int[][] payoffMatrix = new int[numberOfCities][numberOfCities];
-
-        for(int i = 0; i < numberOfCities; i++) {
-            for(int j = 0; j < numberOfCities; j++) {
-                City firstCity = cities[i];
-                City secondCity = cities[j];
-
-                if(firstCity == secondCity) {
-                    int payoff = totalNumberOfInhabitants / 2;
-                    payoffMatrix[i][j] = payoff;
-                } else {
-                    int customers = 0;
     
-                    for(City city : cities) {
-                        int size = city.getSize();
-    
-                        double distanceToFirst = city.dist(firstCity);
-                        double distanceToSecond = city.dist(secondCity);
-    
-                        if(distanceToFirst < distanceToSecond) {
-                            customers += size;
-                        } else if(distanceToFirst == distanceToSecond) {
-                            customers += size / 2;
-                        }
-                    }
-    
-                    int payoff = customers;
-                    payoffMatrix[i][j] = payoff;
-                }
-            }
-        }
-
-        return payoffMatrix;
-    }
 
 
-    public static int[][] eliminate(int[][] payoffMatrix, City[] cities) {
+    public static City[] citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
         int[][] payoff = payoffMatrix;
 
         boolean cityDeleted = false;
 
         ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
 
+        int round = 0;
         do {
+            round++;
+            System.out.println("Round " + round + ":");
+
+            cityDeleted = false;
             for(int row = 0; row < payoff.length; row++) {
                 boolean rowDominated = true;
     
@@ -74,16 +39,16 @@ public class Elimination {
         
                             break;
                         }
-                        else cityDeleted = false;
                     }
                 }
             }
         } while(cityDeleted && payoff.length > 1);
 
+        System.out.println("No more cities to be eliminated.");
         System.out.println("Cities left: " + citiesLeft.size());
         for(City city : citiesLeft) System.out.print(city.getName() + " ");
         
-        return payoff;
+        return (City[]) citiesLeft.toArray();
     }
 
 
