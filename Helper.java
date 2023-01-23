@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Helper {
 
     public static void main(String[] args) {
-        int maxDistance = 15;
+        int maxDistance = 9;
 
         ArrayList<City> cities = readCities("cities.txt");
         boolean[][] edges = createEdgeMatrix(cities, maxDistance);
@@ -18,8 +18,8 @@ public class Helper {
 
         // Elimination.citiesLeftAfterElimination(payoffs, cities);
 
-        City startA = cities.get(0);
-        City startB = cities.get(45);
+        City startA = cities.get(1);
+        City startB = cities.get(49);
 
         LocalSearch.performLocalSearch(cities, edges, payoffs, startA, startB);
 
