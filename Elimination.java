@@ -3,9 +3,6 @@ import java.util.Arrays;
 
 public class Elimination {
 
-    
-
-
     public static City[] citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
         int[][] payoff = payoffMatrix;
 
