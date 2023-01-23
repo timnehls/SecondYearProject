@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,55 +42,73 @@ public class Elimination {
             }
         }
 
-        try {
-            File file = new File("results.txt");
-            FileWriter w = new FileWriter(file);
-            w.write(Arrays.deepToString(payoffMatrix));
-
-            w.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        
-
         return payoffMatrix;
     }
 
 
     public static int[][] eliminate(int[][] payoffMatrix, City[] cities) {
-        
-        
-        return null;
+        int[][] payoff = payoffMatrix;
 
+        boolean cityDeleted = false;
+
+        ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
+
+        do {
+            for(int row = 0; row < payoff.length; row++) {
+                boolean rowDominated = true;
+    
+                for(int secondRow = 0; secondRow < payoff.length; secondRow++) {
+                    if(row != secondRow) {
+                        for(int column = 0; column < payoff[row].length; column++) {
+                            if(payoff[row][column] >= payoff[secondRow][column]) {
+                                rowDominated = false;
+                                break;
+                            }
+                        }
+                        if(rowDominated) {
+                            System.out.println("City " + citiesLeft.get(row).getName() + " has been eliminated.");
+                            cityDeleted = true;
+                            
+                            citiesLeft.remove(row);
+                            payoff = removeFromMatrix(payoff, row);
+        
+                            break;
+                        }
+                        else cityDeleted = false;
+                    }
+                }
+            }
+        } while(cityDeleted && payoff.length > 1);
+
+        System.out.println("Cities left: " + citiesLeft.size());
+        for(City city : citiesLeft) System.out.print(city.getName() + " ");
+        
+        return payoff;
     }
 
 
-    private static int[][] deleteCity(int[][] matrix, int cityID) {
-        // System.out.println("The city " + graph.getCities().get(cityID).getName() + " has been eliminated.");
-
-        int[][] newMatrix = new int[matrix.length-1][matrix[0].length];
-
-        for(int a = 0; a < newMatrix.length; a++) {
-            if(a != cityID) {
-                newMatrix[a] = matrix[a];
+    private static int[][] removeFromMatrix(int[][] matrix, int cityID) {
+        int[][] newMatrix = new int[matrix.length-1][matrix[0].length-1];
+        
+        int countRow = 0;
+        for(int ro = 0; ro < matrix.length; ro++) {
+            if(cityID == ro) {
+                continue;
             }
-        }
 
-        matrix = newMatrix;
-
-        newMatrix = new int[matrix.length][matrix[0].length-1];
-
-        for(int a = 0; a < newMatrix.length; a++) {
-            for(int b = 0; b < newMatrix[0].length; b++) {
-                if(b != cityID) {
-                    newMatrix[a][b] = matrix[a][b];
+            int countColumn = 0;
+            for(int col = 0; col < matrix.length; col++) {
+                if(cityID == col) {
+                    continue;
                 }
+                newMatrix[countRow][countColumn] = matrix[ro][col];
+                countColumn++;
             }
-        }
 
-        matrix = newMatrix;
-        return matrix;
+            countRow++;
+        }
+        
+        return newMatrix;
     }
 
     public static boolean isDominated(boolean[] row) {
