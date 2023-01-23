@@ -20,7 +20,7 @@ public class Helper {
 
     public static void printPayoffs(int[][] payoffs) {
         try {
-            File file = new File("payoffs.txt");
+            File file = new File("payoffsNew.txt");
             FileWriter writer = new FileWriter(file);
 
             for(int row = 0; row < payoffs.length; row++) {

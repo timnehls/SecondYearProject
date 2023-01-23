@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class Elimination {
 
-    public static City[] citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
+    public static void citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
         int[][] payoff = payoffMatrix;
 
         boolean cityDeleted = false;
@@ -17,9 +17,10 @@ public class Elimination {
 
             cityDeleted = false;
             for(int row = 0; row < payoff.length; row++) {
-                boolean rowDominated = true;
+                // boolean rowDominated = true;
     
                 for(int secondRow = 0; secondRow < payoff.length; secondRow++) {
+                    boolean rowDominated = true;
                     if(row != secondRow) {
                         for(int column = 0; column < payoff[row].length; column++) {
                             if(payoff[row][column] >= payoff[secondRow][column]) {
@@ -47,7 +48,7 @@ public class Elimination {
         System.out.println("Cities left: " + citiesLeft.size());
         for(City city : citiesLeft) System.out.print(city.getName() + " ");
         
-        return (City[]) citiesLeft.toArray();
+        // return (City[]) citiesLeft.toArray();
     }
 
 
