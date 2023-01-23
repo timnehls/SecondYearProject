@@ -18,7 +18,7 @@ public class Helper {
         Elimination.citiesLeftAfterElimination(payoffs, cities);
     }
 
-    private static void printPayoffs(int[][] payoffs) {
+    public static void printPayoffs(int[][] payoffs) {
         try {
             File file = new File("payoffs.txt");
             FileWriter writer = new FileWriter(file);

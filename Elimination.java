@@ -41,6 +41,8 @@ public class Elimination {
             }
         } while(cityDeleted && payoff.length > 1);
 
+        Helper.printPayoffs(payoff);
+
         System.out.println("No more cities to be eliminated.");
         System.out.println("Cities left: " + citiesLeft.size());
         for(City city : citiesLeft) System.out.print(city.getName() + " ");
