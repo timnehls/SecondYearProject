@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Helper {
@@ -8,17 +9,23 @@ public class Helper {
     public static void main(String[] args) {
         int maxDistance = 15;
 
-        City[] cities = readCities("cities.txt");
+        ArrayList<City> cities = readCities("cities.txt");
         boolean[][] edges = createEdgeMatrix(cities, maxDistance);
 
-        int[][] payoffs = createPayoffMatrix(edges, cities);
+        int[][] payoffs = createPayoffMatrix(cities);
 
         printPayoffs(payoffs);
 
-        Elimination.citiesLeftAfterElimination(payoffs, cities);
+        // Elimination.citiesLeftAfterElimination(payoffs, cities);
+
+        City startA = cities.get(0);
+        City startB = cities.get(1);
+
+        LocalSearch.performLocalSearch(cities, edges, payoffs, startA, startB);
+
     }
 
-    public static void printPayoffs(int[][] payoffs) {
+    private static void printPayoffs(int[][] payoffs) {
         try {
             File file = new File("payoffsNew.txt");
             FileWriter writer = new FileWriter(file);
@@ -37,14 +44,14 @@ public class Helper {
     }
 
 
-    private static boolean[][] createEdgeMatrix(City[] cities, int maxDistance) {
-        boolean[][] matrix = new boolean[cities.length][cities.length];
+    private static boolean[][] createEdgeMatrix(ArrayList<City> cities, int maxDistance) {
+        boolean[][] matrix = new boolean[cities.size()][cities.size()];
         
-        for(int i = 0; i < cities.length; i++) {
-            City currentCity = cities[i];
+        for(int i = 0; i < cities.size(); i++) {
+            City currentCity = cities.get(i);
 
-            for(int j = 0; j < cities.length; j++) {
-                City otherCity = cities[j];
+            for(int j = 0; j < cities.size(); j++) {
+                City otherCity = cities.get(j);
                 if(currentCity.dist(otherCity) <= maxDistance) matrix[i][j] = true; 
             }
         }
@@ -53,22 +60,22 @@ public class Helper {
     }
 
 
-    private static City[] readCities(String filename) {
+    private static ArrayList<City> readCities(String filename) {
         try {
             File file = new File(filename);
             Scanner sc = new Scanner(file);
 
             int numberOfCities = sc.nextInt();
 
-            City[] cities = new City[numberOfCities];
+            ArrayList<City> cities = new ArrayList<>();
 
-            for(int i = 0; i < cities.length; i++) {
+            for(int i = 0; i < numberOfCities; i++) {
                 String name = sc.next();
                 int size = sc.nextInt();
                 double latitude = sc.nextDouble();
                 double longitude = sc.nextDouble();
 
-                cities[i] = new City(name, size, latitude, longitude);
+                cities.add(new City(name, size, latitude, longitude));
             }
 
             sc.close();
@@ -80,8 +87,8 @@ public class Helper {
         }
     }
 
-    private static int[][] createPayoffMatrix(boolean[][] edges, City[] cities) {
-        int numberOfCities = cities.length;
+    private static int[][] createPayoffMatrix(ArrayList<City> cities) {
+        int numberOfCities = cities.size();
         int totalNumberOfInhabitants = 0;
 
         for(City city : cities) totalNumberOfInhabitants += city.getSize();
@@ -91,8 +98,8 @@ public class Helper {
 
         for(int i = 0; i < numberOfCities; i++) {
             for(int j = 0; j < numberOfCities; j++) {
-                City firstCity = cities[i];
-                City secondCity = cities[j];
+                City firstCity = cities.get(i);
+                City secondCity = cities.get(j);
 
                 if(firstCity == secondCity) {
                     int payoff = totalNumberOfInhabitants / 2;

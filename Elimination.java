@@ -6,12 +6,12 @@ public class Elimination {
     public static void citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
         int[][] payoff = payoffMatrix;
 
-        boolean cityDeleted = false;
+        boolean cityDeleted = true;
 
         ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
 
         int round = 0;
-        do {
+        while(cityDeleted && payoff.length > 1) {
             round++;
             System.out.println("Round " + round + ":");
 
@@ -40,15 +40,11 @@ public class Elimination {
                     }
                 }
             }
-        } while(cityDeleted && payoff.length > 1);
-
-        Helper.printPayoffs(payoff);
+        } 
 
         System.out.println("No more cities to be eliminated.");
         System.out.println("Cities left: " + citiesLeft.size());
         for(City city : citiesLeft) System.out.print(city.getName() + " ");
-        
-        // return (City[]) citiesLeft.toArray();
     }
 
 
