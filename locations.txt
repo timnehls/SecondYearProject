@@ -1,0 +1,43 @@
+Merzpark	50,83106	6,53359
+ImGrossenTal	50,83362	6,46324
+Roelsdorf	50,78835	6,46879
+Weisweiler	50,82049	6,29803
+WuerselenSued	50,80787	6,15110
+AachenWest	50,78455	6,06701
+AachenBrand	50,75920	6,14169
+Imgenbroich	50,57537	6,26292
+SimmerathOst	50,60614	6,31130
+SchleidenNord	50,54209	6,48686
+KallOst	50,54686	6,57791
+NettersheimNord	50,49539	6,62226
+BadMuenstereifelSued	50,54896	6,76321
+MechernichOst	50,59122	6,66588
+EuskirchenWest	50,65569	6,76812
+EuskirchenSued	50,64555	6,80204
+WeilerswistNord	50,76067	6,84517
+Lechenich	50,79912	6,78124
+Liblar	50,80258	6,81406
+Tuernich	50,87471	6,75134
+ErftKarree 50,88149	6,69089
+Sindorf	50,89776	6,68208
+Zieverich	50,94329	6,62840
+ElsdorfOst	50,93857	6,58319
+JuelichOst	50,92700	6,37253
+JuelichSued	50,90787	6,36071
+AldenhovenOst	50,90315	6,31258
+Gevenich	50,98372	6,29984
+Boscheln	50,91318	6,14773
+Mariadorf	50,86049	6,20420
+
+
+
+
+
+
+
+
+
+
+
+
+
