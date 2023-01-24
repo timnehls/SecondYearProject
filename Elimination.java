@@ -1,21 +1,20 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Elimination {
 
-    public static void citiesLeftAfterElimination(int[][] payoffMatrix, City[] cities) {
+    public static void citiesLeftAfterElimination(int[][] payoffMatrix, ArrayList<Location> locations) {
         int[][] payoff = payoffMatrix;
 
-        boolean cityDeleted = true;
+        boolean locationDeleted = true;
 
-        ArrayList<City> citiesLeft = new ArrayList<>(Arrays.asList(cities));
+        ArrayList<Location> locationsLeft = locations;
 
         int round = 0;
-        while(cityDeleted && payoff.length > 1) {
+        while(locationDeleted && payoff.length > 1) {
             round++;
             System.out.println("Round " + round + ":");
 
-            cityDeleted = false;
+            locationDeleted = false;
             for(int row = 0; row < payoff.length; row++) {
                 for(int secondRow = 0; secondRow < payoff.length; secondRow++) {
                     boolean rowDominated = true;
@@ -27,10 +26,10 @@ public class Elimination {
                             }
                         }
                         if(rowDominated) {
-                            System.out.println("City " + citiesLeft.get(row).getName() + " has been eliminated.");
-                            cityDeleted = true;
+                            System.out.println("City " + locationsLeft.get(row).getName() + " has been eliminated.");
+                            locationDeleted = true;
                             
-                            citiesLeft.remove(row);
+                            locationsLeft.remove(row);
                             payoff = removeFromMatrix(payoff, row);
         
                             break;
@@ -41,8 +40,8 @@ public class Elimination {
         } 
 
         System.out.println("No more cities to be eliminated.");
-        System.out.println("Cities left: " + citiesLeft.size());
-        for(City city : citiesLeft) System.out.print(city.getName() + " ");
+        System.out.println("Cities left: " + locationsLeft.size());
+        for(Location location : locationsLeft) System.out.print(location.getName() + " ");
     }
 
 

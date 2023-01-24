@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class LocalSearch {
 
-    public static void performLocalSearch(ArrayList<City> cities, boolean[][] adjacencyMatrix, int[][] payoffs, City startA, City startB) {
+    public static void performLocalSearch(ArrayList<Location> cities, boolean[][] adjacencyMatrix, int[][] payoffs, Location startA, Location startB) {
         int totalInhabitants = 1626055;
         int idA = cities.indexOf(startA);
         int idB = cities.indexOf(startB);

@@ -1,58 +1,45 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.util.ArrayList;
+// import java.util.Arrays;
 import java.util.Scanner;
 
 public class Helper {
 
     public static void main(String[] args) {
-        int maxDistance = 9;
+        int maxDistance = 5;
 
         ArrayList<City> cities = readCities("cities.txt");
-        boolean[][] edges = createEdgeMatrix(cities, maxDistance);
+        ArrayList<Location> locations = readLocations("locations.txt");
 
-        int[][] payoffs = createPayoffMatrix(cities);
+        /* for(City city : cities) {
+            locations.add(city);
+        } */
 
-        printPayoffs(payoffs);
+        boolean[][] edgesCities = createEdgeMatrix(locations, maxDistance);
 
-        // Elimination.citiesLeftAfterElimination(payoffs, cities);
 
-        City startA = cities.get(1);
-        City startB = cities.get(49);
+        int[][] payoffs2 = createPayoffsLocation(cities, locations);
 
-        LocalSearch.performLocalSearch(cities, edges, payoffs, startA, startB);
 
-    }
+        // Elimination.citiesLeftAfterElimination(payoffs2, locations);
 
-    private static void printPayoffs(int[][] payoffs) {
-        try {
-            File file = new File("payoffsNew.txt");
-            FileWriter writer = new FileWriter(file);
+        Location startA = locations.get(1);
+        Location startB = locations.get(20);
 
-            for(int row = 0; row < payoffs.length; row++) {
-                for(int col = 0; col < payoffs[0].length; col++) {
-                    writer.append(payoffs[row][col] + "  ");
-                }
-                writer.append("\n");
-            }
-
-            writer.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        LocalSearch.performLocalSearch(locations, edgesCities, payoffs2, startA, startB);
     }
 
 
-    private static boolean[][] createEdgeMatrix(ArrayList<City> cities, int maxDistance) {
-        boolean[][] matrix = new boolean[cities.size()][cities.size()];
+    private static boolean[][] createEdgeMatrix(ArrayList<Location> locations, int maxDistance) {
+        boolean[][] matrix = new boolean[locations.size()][locations.size()];
         
-        for(int i = 0; i < cities.size(); i++) {
-            City currentCity = cities.get(i);
+        for(int i = 0; i < locations.size(); i++) {
+            Location currentLocation = locations.get(i);
 
-            for(int j = 0; j < cities.size(); j++) {
-                City otherCity = cities.get(j);
-                if(currentCity.dist(otherCity) <= maxDistance) matrix[i][j] = true; 
+            for(int j = 0; j < locations.size(); j++) {
+                Location otherLocation = locations.get(j);
+                if(currentLocation.dist(otherLocation) <= maxDistance) matrix[i][j] = true; 
             }
         }
 
@@ -79,7 +66,38 @@ public class Helper {
             }
 
             sc.close();
+
+
             return cities;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    private static ArrayList<Location> readLocations(String filename) {
+        try {
+            File file = new File(filename);
+            Scanner sc = new Scanner(file);
+
+            int numberOfLocations = sc.nextInt();
+
+            ArrayList<Location> locations = new ArrayList<>();
+
+            for(int i = 0; i < numberOfLocations; i++) {
+                String name = sc.next();
+                double latitude = sc.nextDouble();
+                double longitude = sc.nextDouble();
+                locations.add(new Location(name,  latitude, longitude));
+            }
+
+            sc.close();
+
+
+            return locations;
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
 
@@ -120,13 +138,46 @@ public class Helper {
                         }
                     }
     
-                    int payoff = customers;
-                    payoffMatrix[i][j] = payoff;
+                    payoffMatrix[i][j] = customers;
                 }
             }
         }
 
         return payoffMatrix;
     }
+
+    private static int[][] createPayoffsLocation(ArrayList<City> cities, ArrayList<Location> locations) {
+        int numberOfLocations = locations.size();
+
+        int[][] payoffMatrix = new int[numberOfLocations][numberOfLocations];
+
+        for(int i = 0; i < numberOfLocations; i++) {
+            for(int j = 0; j < numberOfLocations; j++) {
+                Location firstLocation = locations.get(i);
+                Location secondLocation = locations.get(j);
+
+                int customers = 0;
+
+                for(City city : cities) {
+                    int size = city.getSize();
+
+                    double distanceToFirst = city.dist(firstLocation);
+                    double distanceToSecond = city.dist(secondLocation);
+
+                    if(distanceToFirst < distanceToSecond) {
+                        customers += size;
+                    } else if(distanceToFirst == distanceToSecond) {
+                        customers += size / 2;
+                    }
+                }
+
+                payoffMatrix[i][j] = customers;
+            }
+        }
+
+        return payoffMatrix;
+    }
+
+
 
 }
