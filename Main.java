@@ -1,33 +1,74 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-// import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Helper {
+public class Main {
 
     public static void main(String[] args) {
-        int maxDistance = 5;
+        String fileCities = "cities.txt", fileLocations = "locations.txt"; // specify here your input files
 
-        ArrayList<City> cities = readCities("cities.txt");
-        ArrayList<Location> locations = readLocations("locations.txt");
+        String startA = "Merzpark", startB = "ErftKarree";
+        int maxDistance = 12;
 
-        /* for(City city : cities) {
-            locations.add(city);
-        } */
+        /* 
+         * You have two choices:
+         * 1. determine a location by using the local search approach
+         * by specifying the names of the starting cities
+         * and a maximum edge length, e.g.:
+         */
 
-        boolean[][] edgesCities = createEdgeMatrix(locations, maxDistance);
+        localSearch(fileCities, fileLocations, maxDistance, startA, startB);
 
+        /* 
+         * 2. conduct iterative elimination of dominated strategies by
+         * calling: 
+         */
 
-        int[][] payoffs2 = createPayoffsLocation(cities, locations);
+        iterativeElimination(fileCities, fileLocations);
+    }
 
+    private static void iterativeElimination(String filenameCities, String filenameLocations) {
+        ArrayList<City> cities = readCities(filenameCities);
+        ArrayList<Location> locations;
+        
+        if(filenameCities.equals(filenameLocations)) {
+            locations = new ArrayList<>();
+            for(City city : cities) locations.add(city);
+        } else {
+            locations = readLocations(filenameLocations);
+        }
 
-        // Elimination.citiesLeftAfterElimination(payoffs2, locations);
+        int[][] payoffs = createPayoffMatrix(cities, locations);
+        Elimination.citiesLeftAfterElimination(payoffs, locations);
+    }
 
-        Location startA = locations.get(1);
-        Location startB = locations.get(20);
+    private static void localSearch(String filenameCities, String filenameLocations, int maxDistance, String idA, String idB) throws NoSuchElementException{
+        ArrayList<City> cities = readCities(filenameCities);
+        ArrayList<Location> locations;
+        
+        if(filenameCities.equals(filenameLocations)) {
+            locations = new ArrayList<>();
+            for(City city : cities) locations.add(city);
+        } else {
+            locations = readLocations(filenameLocations);
+        }
 
-        LocalSearch.performLocalSearch(locations, edgesCities, payoffs2, startA, startB);
+        boolean[][] edges = createEdgeMatrix(locations, maxDistance);
+        int[][] payoffs = createPayoffMatrix(cities, locations);
+
+        Location startA = null;
+        Location startB = null;
+
+        for(Location location : locations) {
+            if(location.getName().equalsIgnoreCase(idA)) startA = location;
+            else if(location.getName().equalsIgnoreCase(idB)) startB = location;
+        }
+
+        if(startA != null && startB != null) {
+            LocalSearch.performLocalSearch(locations, edges, payoffs, startA, startB);
+        } else throw new NoSuchElementException("Location with given name not in location file");
     }
 
 
@@ -105,48 +146,7 @@ public class Helper {
         }
     }
 
-    private static int[][] createPayoffMatrix(ArrayList<City> cities) {
-        int numberOfCities = cities.size();
-        int totalNumberOfInhabitants = 0;
-
-        for(City city : cities) totalNumberOfInhabitants += city.getSize();
-
-
-        int[][] payoffMatrix = new int[numberOfCities][numberOfCities];
-
-        for(int i = 0; i < numberOfCities; i++) {
-            for(int j = 0; j < numberOfCities; j++) {
-                City firstCity = cities.get(i);
-                City secondCity = cities.get(j);
-
-                if(firstCity == secondCity) {
-                    int payoff = totalNumberOfInhabitants / 2;
-                    payoffMatrix[i][j] = payoff;
-                } else {
-                    int customers = 0;
-    
-                    for(City city : cities) {
-                        int size = city.getSize();
-    
-                        double distanceToFirst = city.dist(firstCity);
-                        double distanceToSecond = city.dist(secondCity);
-    
-                        if(distanceToFirst < distanceToSecond) {
-                            customers += size;
-                        } else if(distanceToFirst == distanceToSecond) {
-                            customers += size / 2;
-                        }
-                    }
-    
-                    payoffMatrix[i][j] = customers;
-                }
-            }
-        }
-
-        return payoffMatrix;
-    }
-
-    private static int[][] createPayoffsLocation(ArrayList<City> cities, ArrayList<Location> locations) {
+    private static int[][] createPayoffMatrix(ArrayList<City> cities, ArrayList<Location> locations) {
         int numberOfLocations = locations.size();
 
         int[][] payoffMatrix = new int[numberOfLocations][numberOfLocations];

@@ -7,8 +7,10 @@ public class LocalSearch {
         int idA = cities.indexOf(startA);
         int idB = cities.indexOf(startB);
 
+        System.out.println("\n\n\nLocal search: \n");
+
         System.out.println("Starting location firm A: " + startA.getName());
-        System.out.println("Starting location firm B: " + startB.getName());
+        System.out.println("Starting location firm B: " + startB.getName() + "\n");
 
         int payoffA = payoffs[idA][idB];
         int payoffB = totalInhabitants - payoffA;
@@ -62,7 +64,7 @@ public class LocalSearch {
             else System.out.println("Firm B stays at " + cities.get(idB).getName() + " for this round.");
         }
 
-        System.out.println("End locations: " + cities.get(idA).getName() + " and " + cities.get(idB).getName());
+        System.out.println("\nEnd locations: " + cities.get(idA).getName() + " and " + cities.get(idB).getName());
         System.out.println("Payoff firm A: " + payoffA + "; payoff firm B: " + payoffB);
 
     }

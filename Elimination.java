@@ -9,10 +9,12 @@ public class Elimination {
 
         ArrayList<Location> locationsLeft = locations;
 
+        System.out.println("\n\nIterated elimination of dominated strategies: \n");
+
         int round = 0;
         while(locationDeleted && payoff.length > 1) {
             round++;
-            System.out.println("Round " + round + ":");
+            System.out.println("\nRound " + round + ":");
 
             locationDeleted = false;
             for(int row = 0; row < payoff.length; row++) {
@@ -39,7 +41,7 @@ public class Elimination {
             }
         } 
 
-        System.out.println("No more cities to be eliminated.");
+        System.out.println("No more cities to be eliminated.\n");
         System.out.println("Cities left: " + locationsLeft.size());
         for(Location location : locationsLeft) System.out.print(location.getName() + " ");
     }
