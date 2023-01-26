@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class Elimination {
 
-    public static void citiesLeftAfterElimination(int[][] payoffMatrix, ArrayList<Location> locations) {
+    // changed name of method and list of cities to list of locations; mechanics are the same
+    public static void locationsLeftAfterElimination(int[][] payoffMatrix, ArrayList<Location> locations) {
         int[][] payoff = payoffMatrix;
 
         boolean locationDeleted = true;
@@ -57,8 +58,9 @@ public class Elimination {
         System.out.println("Cities left: " + locationsLeft.size());
         for(Location location : locationsLeft) System.out.print(location.getName() + " ");
     }
+    
 
-
+    // just taken from the original file
     private static int[][] removeFromMatrix(int[][] matrix, int cityID) {
         int[][] newMatrix = new int[matrix.length-1][matrix[0].length-1];
         
@@ -81,11 +83,5 @@ public class Elimination {
         }
         
         return newMatrix;
-    }
-
-    public static boolean isDominated(boolean[] row) {
-        for(boolean payoff : row)
-            if(!payoff) return false;
-        return true;
     }
 }

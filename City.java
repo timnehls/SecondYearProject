@@ -1,3 +1,4 @@
+// now inherits Location's attributes and methods
 public class City extends Location {
     private final int size; 
 

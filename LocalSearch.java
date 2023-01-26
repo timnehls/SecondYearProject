@@ -2,10 +2,11 @@ import java.util.ArrayList;
 
 public class LocalSearch {
 
-    public static void performLocalSearch(ArrayList<Location> cities, boolean[][] adjacencyMatrix, int[][] payoffs, Location startA, Location startB) {
+    // changed City startA, startB to Location startA, startB; mechanics are the same
+    public static void performLocalSearch(ArrayList<Location> locations, boolean[][] adjacencyMatrix, int[][] payoffs, Location startA, Location startB) {
         int totalInhabitants = 1626055;
-        int idA = cities.indexOf(startA);
-        int idB = cities.indexOf(startB);
+        int idA = locations.indexOf(startA);
+        int idB = locations.indexOf(startB);
 
         System.out.println("\n\n\nLocal search: \n");
 
@@ -42,8 +43,8 @@ public class LocalSearch {
                 }
             }
 
-            if(changedA) System.out.println("Firm A changed from " + cities.get(prevIDA).getName() + " to " + cities.get(idA).getName() + ".");
-            else System.out.println("Firm A stays at " + cities.get(idA).getName() + " for this round.");
+            if(changedA) System.out.println("Firm A changed from " + locations.get(prevIDA).getName() + " to " + locations.get(idA).getName() + ".");
+            else System.out.println("Firm A stays at " + locations.get(idA).getName() + " for this round.");
 
             payoffB = totalInhabitants - payoffA;
 
@@ -60,20 +61,21 @@ public class LocalSearch {
                 }
             }
 
-            if(changedB) System.out.println("Firm B changed from " + cities.get(prevIDB).getName() + " to " + cities.get(idB).getName() + ".");
-            else System.out.println("Firm B stays at " + cities.get(idB).getName() + " for this round.");
+            if(changedB) System.out.println("Firm B changed from " + locations.get(prevIDB).getName() + " to " + locations.get(idB).getName() + ".");
+            else System.out.println("Firm B stays at " + locations.get(idB).getName() + " for this round.");
         }
 
-        System.out.println("\nEnd locations: " + cities.get(idA).getName() + " and " + cities.get(idB).getName());
+        System.out.println("\nEnd locations: " + locations.get(idA).getName() + " and " + locations.get(idB).getName());
         System.out.println("Payoff firm A: " + payoffA + "; payoff firm B: " + payoffB);
 
     }
 
-    private static ArrayList<Integer> findNeighbours(int cityID, boolean[][] adjacencyMatrix) {
+    // changed cityID to locationID
+    private static ArrayList<Integer> findNeighbours(int locationID, boolean[][] adjacencyMatrix) {
         ArrayList<Integer> neighbours = new ArrayList<>();
         
-        for(int column = 0; column < adjacencyMatrix[cityID].length; column++) {
-            if(adjacencyMatrix[cityID][column] && cityID != column) neighbours.add(column);
+        for(int column = 0; column < adjacencyMatrix[locationID].length; column++) {
+            if(adjacencyMatrix[locationID][column] && locationID != column) neighbours.add(column);
         }
         
         return neighbours;

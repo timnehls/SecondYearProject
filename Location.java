@@ -1,3 +1,4 @@
+// new class, is superclass to City
 public class Location {
     private final String name;
     private final double latitude, longitude;
