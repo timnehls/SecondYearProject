@@ -9,15 +9,15 @@ public class Main {
     public static void main(String[] args) {
         String fileCities = "cities.txt", fileLocations = "locations.txt"; // specify here your input files
 
-        String startA = "Merzpark", startB = "ErftKarree";
-        int maxDistance = 12;
-
         /* 
          * You have two choices:
          * 1. determine a location by using the local search approach
-         * by specifying the names of the starting cities
+         * by specifying the names of the starting locations
          * and a maximum edge length, e.g.:
          */
+
+        String startA = "Merzpark", startB = "ErftKarree";
+        int maxDistance = 12;
 
         localSearch(fileCities, fileLocations, maxDistance, startA, startB);
 
@@ -26,10 +26,10 @@ public class Main {
          * calling: 
          */
 
-        iterativeElimination(fileCities, fileLocations);
+        iterativeElimination(fileCities, fileLocations, true);
     }
 
-    private static void iterativeElimination(String filenameCities, String filenameLocations) {
+    private static void iterativeElimination(String filenameCities, String filenameLocations, boolean transport) {
         ArrayList<City> cities = readCities(filenameCities);
         ArrayList<Location> locations;
         
@@ -40,7 +40,15 @@ public class Main {
             locations = readLocations(filenameLocations);
         }
 
-        int[][] payoffs = createPayoffMatrix(cities, locations);
+        int[][] payoffs = null;
+
+        if(!transport) {
+            payoffs = createPayoffMatrix(cities, locations);
+        } 
+        else {
+            payoffs = createPayoffMatrixTransport(cities, locations);
+        }
+
         Elimination.citiesLeftAfterElimination(payoffs, locations);
     }
 
@@ -172,6 +180,42 @@ public class Main {
                 }
 
                 payoffMatrix[i][j] = customers;
+            }
+        }
+
+        return payoffMatrix;
+    }
+
+    private static int[][] createPayoffMatrixTransport(ArrayList<City> cities, ArrayList<Location> locations) {
+        Location loadingStation = new Location("KoelnEifeltor", 50.88858, 6.92080);
+        
+        int numberOfLocations = locations.size();
+
+        int[][] payoffMatrix = new int[numberOfLocations][numberOfLocations];
+
+        for(int i = 0; i < numberOfLocations; i++) {
+            for(int j = 0; j < numberOfLocations; j++) {
+                Location firstLocation = locations.get(i);
+                Location secondLocation = locations.get(j);
+
+                double distFirstA = firstLocation.dist(loadingStation);
+
+                int customers = 0;
+
+                for(City city : cities) {
+                    int size = city.getSize();
+
+                    double distanceToFirst = city.dist(firstLocation);
+                    double distanceToSecond = city.dist(secondLocation);
+
+                    if(distanceToFirst < distanceToSecond) {
+                        customers += size;
+                    } else if(distanceToFirst == distanceToSecond) {
+                        customers += size / 2;
+                    }
+                }
+
+                payoffMatrix[i][j] = customers - (int) (distFirstA*50) - (int) (distFirstA / 100 * customers) ;
             }
         }
 

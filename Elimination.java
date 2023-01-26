@@ -9,10 +9,12 @@ public class Elimination {
 
         ArrayList<Location> locationsLeft = locations;
 
+
         System.out.println("\n\nIterated elimination of dominated strategies: \n");
 
         int round = 0;
         while(locationDeleted && payoff.length > 1) {
+            ArrayList<Location> toDelete = new ArrayList<>();
             round++;
             System.out.println("\nRound " + round + ":");
 
@@ -28,17 +30,27 @@ public class Elimination {
                             }
                         }
                         if(rowDominated) {
-                            System.out.println("City " + locationsLeft.get(row).getName() + " has been eliminated.");
+                            Location LocationToDelete = locationsLeft.get(row);
                             locationDeleted = true;
+
+                            toDelete.add(LocationToDelete);
                             
-                            locationsLeft.remove(row);
-                            payoff = removeFromMatrix(payoff, row);
-        
                             break;
                         }
+
                     }
                 }
             }
+
+            for(int i = 0; i < toDelete.size(); i++) {
+                Location cityToDelete = toDelete.get(i);
+
+                System.out.println("City " + cityToDelete.getName() + " has been eliminated.");
+
+                payoff = removeFromMatrix(payoff, locationsLeft.indexOf(cityToDelete));
+                locationsLeft.remove(locationsLeft.indexOf(cityToDelete));
+            }
+
         } 
 
         System.out.println("No more cities to be eliminated.\n");
